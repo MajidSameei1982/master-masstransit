@@ -33,7 +33,17 @@ public class Program
                     x.AddSagas(entryAssembly);
                     x.AddActivities(entryAssembly);
 
-                    x.UsingInMemory((context, cfg) => { cfg.ConfigureEndpoints(context); });
+                    x.UsingRabbitMq((ctx, cfg) =>
+                    {
+                        cfg.Host("localhost", h =>
+                        {
+                            h.Username("guest");
+                            h.Password("guest");
+                        });
+                        cfg.ConfigureEndpoints(ctx);
+                    });
+
+                    // x.UsingInMemory((context, cfg) => { cfg.ConfigureEndpoints(context); });
                 });
 
                 services.AddHostedService<Worker>();
